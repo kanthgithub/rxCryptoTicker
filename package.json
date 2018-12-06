@@ -2,6 +2,7 @@
   "name": "ticker",
   "version": "0.2.0",
   "private": true,
+  "homepage": "https://kanthgithub.github.io/rxCryptoTicker",
   "main": "index.js",
   "author": "lakshmi kanth",
   "license": "MIT",
@@ -9,10 +10,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "gh-pages": "^2.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "^1.1.1",
