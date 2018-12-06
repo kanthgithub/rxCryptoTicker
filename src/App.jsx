@@ -1,13 +1,13 @@
 import React from 'react';
 import Navbar from './components/Navbar';
-import Ticker from './components/Ticker';
+import rxCryptoTicker from './components/RxCryptoTicker';
 
 
 let App = () => {
   return (
     <div>
       <Navbar />
-      <Ticker />
+      <rxCryptoTicker />
     </div>
   );
 };

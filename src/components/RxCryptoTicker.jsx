@@ -7,7 +7,7 @@ let CRYPTOCOMPARE_API = "https://streamer.cryptocompare.com/";
 let COINMARKET_API = "https://api.coinmarketcap.com/v1/ticker/";
 
 
-class Ticker extends React.Component {
+class rxCryptoTicker extends React.Component {
 
   constructor() {
     super();
@@ -130,4 +130,4 @@ class Ticker extends React.Component {
 };
 
 
-export default Ticker;
+export default rxCryptoTicker;
