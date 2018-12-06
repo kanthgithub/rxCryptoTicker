@@ -24,4 +24,3 @@
 <h3>Credits:</h3>
 <p>This application uses <a href="https://coinmarketcap.com/api/">CoinMarketCap API</a> and <a href="https://www.cryptocompare.com/api">CryptoCompare WebSocket API</a>. Thanks!</p>
 
-<h3>Licence: MIT</h3>
