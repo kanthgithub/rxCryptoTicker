@@ -2,7 +2,7 @@
 
 <h3>Live demo: <a href="https://kanthgithub.github.io/rxCryptoTicker">kanthgithub.github.io/rxCryptoTicker</a></h3>
 
-<img src="docs/img/ticker_web_v0_2_00.png">
+<img src="docs/img/Reactive_Crypto_Ticker_Dashboard_Snapshot.png">
 
 <h3>Requirements:</h3>
 <ul>
