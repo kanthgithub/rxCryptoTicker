@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 
 let CRYPTOCOMPARE_API = "https://streamer.cryptocompare.com/";
-let COINMARKET_API = "https://api.coinmarketcap.com/v1/ticker/";
+let COINMARKET_API = "http://localhost:8089/tickerData/";
 
 
 class RXCryptoTicker extends React.Component {
@@ -27,14 +27,20 @@ class RXCryptoTicker extends React.Component {
 
         let coins = {};
 
+        console.log(response);
+
         response.data.map((coin) => {
-          coins[coin.symbol] = coin
+            console.log("coin extracted :"+coin);
+
+            coins[coin.symbol] = coin
           return null
         });
         
         this.setState({ "coins": coins });
         this.subscribeCryptoStream();
-      };
+      }else{
+        console.log("error for coin fetch");
+      }
     });
   };
 
