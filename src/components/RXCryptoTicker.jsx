@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 
 let CRYPTOCOMPARE_API = "https://streamer.cryptocompare.com/";
-let COINMARKET_API = "http://localhost:8089/tickerData/";
+let COINMARKET_API = "https://cryptostreamingapi.herokuapp.com/tickerData";
 
 
 class RXCryptoTicker extends React.Component {
