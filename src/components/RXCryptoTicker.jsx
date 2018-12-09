@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 
 let CRYPTOCOMPARE_API = "https://streamer.cryptocompare.com/";
-let COINMARKET_API = "https://cryptostreamingapi.herokuapp.com/tickerData";
+let CRYPTOTICKER_STATIC_DATA_API = "https://cryptostreamingapi.herokuapp.com/tickerData";
 
 
 class RXCryptoTicker extends React.Component {
@@ -12,98 +12,99 @@ class RXCryptoTicker extends React.Component {
   constructor() {
     super();
     this.state = {
-      "coins": {}
+      "tickerEntity": {}
     };
   };
 
   componentWillMount() {
-    this.getAllCoins();
+    this.getTickerStatic();
   };
 
-  getAllCoins = () => {
-    // Get all available coins from CoinMarketCap API.
-    axios.get(COINMARKET_API).then((response) => {
+  getTickerStatic = () => {
+
+    // Get all available tickers from  cryptoTickerStatic-API.
+    axios.get(CRYPTOTICKER_STATIC_DATA_API).then((response) => {
       if (response.status === 200) {
 
-        let coins = {};
+        let tickerStaticEntities = {};
 
         console.log(response);
 
-        response.data.map((coin) => {
-            console.log("coin extracted :"+coin);
+        response.data.map((tickerStatic) => {
 
-            coins[coin.symbol] = coin
+            tickerStaticEntities[tickerStatic.symbol] = tickerStatic
           return null
         });
         
-        this.setState({ "coins": coins });
+        this.setState({ "tickerStaticEntities": tickerStaticEntities });
         this.subscribeCryptoStream();
       }else{
-        console.log("error for coin fetch");
+        console.log("error for tickerStaticEntity fetch");
       }
     });
   };
 
   subscribeCryptoStream = () => {
-    // Subscribe to CryptoCompare websocket API.
 
+    // Subscribe to CryptoCompare websocket API.
     let subs = [];
+
     let cryptoIO = io.connect(CRYPTOCOMPARE_API);
 
-    Object.keys(this.state.coins).map((key) => {
+    Object.keys(this.state.tickerEntity).map((key) => {
       return subs.push("5~CCCAGG~"+ key +"~USD");
     });
 
     cryptoIO.emit("SubAdd", { "subs": subs });
 
     cryptoIO.on("m", (message) => {
-      this.updateCoin(message);
+      this.updateCryptoTickerState(message);
     });
   };
 
-  updateCoin = (message) => {
-    // Update coin with recent data from CryptoCompare websocket API.
+  updateCryptoTickerState = (message) => {
+    // Update tickerEntity with recent data from CryptoCompare websocket API.
     
     message = message.split("~");
-    let coins = Object.assign({}, this.state.coins);
+    let cryptoTickerEntities = Object.assign({}, this.state.tickerEntity);
     
     if ((message[4] === "1") || (message[4] === "2")) {
 
       if (message[4] === "1") {
-        coins[message[2]].goUp = true;
-        coins[message[2]].goDown = false;
+        cryptoTickerEntities[message[2]].goUp = true;
+        cryptoTickerEntities[message[2]].goDown = false;
       }
       else if (message[4] === "2") {
-        coins[message[2]].goUp = false;
-        coins[message[2]].goDown = true;
+        cryptoTickerEntities[message[2]].goUp = false;
+        cryptoTickerEntities[message[2]].goDown = true;
       }
       else {
-        coins[message[2]].goUp = false;
-        coins[message[2]].goDown = false;
+        cryptoTickerEntities[message[2]].goUp = false;
+        cryptoTickerEntities[message[2]].goDown = false;
       }
 
-      coins[message[2]].price_usd = message[5];
-      this.setState({ "coins": coins });
+      cryptoTickerEntities[message[2]].price_usd = message[5];
+      this.setState({ "cryptoTickerEntities": cryptoTickerEntities });
 
       /*
-        Reset coin status after short interval. This is needed to reset
-        css class of tick animation when coin's value goes up or down again.
+        Reset tickerEntity status after short interval. This is needed to reset
+        css class of tick animation when tickerEntity's value goes up or down again.
       */
       setTimeout(() => {
-        coins = Object.assign({}, this.state.coins)
-        coins[message[2]].goUp = false
-        coins[message[2]].goDown = false
-        this.setState({ "coins": coins })
+        cryptoTickerEntities = Object.assign({}, this.state.tickerEntity)
+        cryptoTickerEntities[message[2]].goUp = false
+        cryptoTickerEntities[message[2]].goDown = false
+        this.setState({ "cryptoTickerEntities": cryptoTickerEntities })
       }, 500);
 
     };
   };
 
-  getTickStyle = (coin) => {
-    // Return css style based on coin status.
-    if (coin.goUp) {
+  getTickStyle = (tickerEntity) => {
+    // Return css style based on tickerEntity status.
+    if (tickerEntity.goUp) {
       return " tickGreen ";
-    } else if (coin.goDown) {
+    } else if (tickerEntity.goDown) {
       return " tickRed ";
     } else {
       return " ";
@@ -115,15 +116,15 @@ class RXCryptoTicker extends React.Component {
       <div>
         <div className="container-fluid">
           <div className="row">
-            {Object.keys(this.state.coins).map((key, index) => {
+            {Object.keys(this.state.tickerEntity).map((key, index) => {
               
-              let coin = this.state.coins[key]
+              let tickerEntity = this.state.tickerEntity[key]
 
               return (
                 <div key={ index } className="col-4 col-sm-3 col-xl-2 p-0">
-                  <div className={"stock " + this.getTickStyle(coin) }>
-                    <p className="text-white m-0">{ coin.symbol }</p>
-                    <p className="text-white m-0">{ coin.price_usd }</p>
+                  <div className={"stock " + this.getTickStyle(tickerEntity) }>
+                    <p className="text-white m-0">{ tickerEntity.symbol }</p>
+                    <p className="text-white m-0">{ tickerEntity.price_usd }</p>
                   </div>
                 </div>
               )
