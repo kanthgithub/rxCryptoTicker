@@ -3,7 +3,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 let CRYPTOTICKER_STATIC_DATA_API = "https://cryptostreamingapi.herokuapp.com/tickerData";
-let CRYPTOTICKER_STREAMING_DATA_API = "ws://cryptostreamingapi.herokuapp.com";
+let CRYPTOTICKER_STREAMING_DATA_API = "wss://cryptostreamingapi.herokuapp.com";
 
 
 class RXCryptoTicker extends React.Component {
