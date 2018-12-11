@@ -12,7 +12,21 @@
 ## Streaming:
 
 - Streaming is done via Cryptocompare Streamer
-- Cryptocompare has finer streaming control on CryptoTickers
+- crptostreamingapi has finer streaming control on CryptoTickers
+
+- streamer will internally make regular API-calls to coinmarketcap-api to get the marketdata snapshot of the preferred tickers choosen by user OR default tickers
+
+  - Market data is extracted from coinmarketcap API call
+  
+- Websocket streaming of marketdata
+
+  1. MarketdataStreamer picks the marketdata from API and caches in the local cache
+  
+  2. Each extraction of marketdata-snapshot will compare the results with cached data
+ 
+     - If there is any price change, then the corresponding increase/decrease of price will be marked as indicator
+     - A Px increase will make boolean indicator 'goingup' as true, and viceversa, fall in Px will set indicator 'goingdown'
+     - Default would be false for both
 
 Basic usage of reactive crypto-Ticker Dashboard and approach used in this solution is:
 
