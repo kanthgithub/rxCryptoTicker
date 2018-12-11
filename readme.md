@@ -9,28 +9,16 @@
 <li>socket.io</li>
 </ul>
 
-## Reactive Component - breakdown:
-
-
-
 ## Streaming:
 
 - Streaming is done via Cryptocompare Streamer
 - Cryptocompare has finer streaming control on CryptoTickers
 
-Basic usage of cryptocompare and approach used in this solution is:
+Basic usage of reactive crypto-Ticker Dashboard and approach used in this solution is:
 
-- Streaming URL: 'https://streamer.cryptocompare.com/
+- Streaming URL: ws://cryptostreamingapi.herokuapp.com
+
 - socket.io-client is used to connect/subscribe to market updates
-
-
-- Streaming subscription key: Format: {SubscriptionId}~{ExchangeName}~{FromSymbol}~{ToSymbol}
-- Use SubscriptionId 0 for TRADE, 2 for CURRENT, 5 for CURRENTAGG eg use key '5~CCCAGG~BTC~USD' to get aggregated data from the CCCAGG exchange 
-- For Full Volume Format: 11~{FromSymbol} eg use '11~BTC' to get the full volume of BTC against all tickerEntity pairs
-- For aggregate quote updates use CCCAGG ags market
-
-
-
 
 <h3>Live demo: <a href="https://rxcryptoticker.herokuapp.com/">https://rxcryptoticker.herokuapp.com/</a></h3>
 
@@ -55,5 +43,5 @@ Basic usage of cryptocompare and approach used in this solution is:
 
 <p>This application uses: <br/>
  <a href="https://coinmarketcap.com/api/">CoinMarketCap API</a> for Crypto-Ticker-Static <br/>
- <a href="https://www.cryptocompare.com/api">CryptoCompare WebSocket API</a> to listen market-data updates.</p>
+ <a href="ws://cryptostreamingapi.herokuapp.com">CryptoCompare WebSocket API</a> to listen market-data updates.</p>
 

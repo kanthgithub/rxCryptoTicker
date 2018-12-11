@@ -2,10 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-
-let CRYPTOCOMPARE_API = "https://streamer.cryptocompare.com/";
 let CRYPTOTICKER_STATIC_DATA_API = "https://cryptostreamingapi.herokuapp.com/tickerData";
-let CRYPTOTICKER_STREAMING_DATA_API = "ws://localhost:8089";
+let CRYPTOTICKER_STREAMING_DATA_API = "ws://cryptostreamingapi.herokuapp.com";
 
 
 class RXCryptoTicker extends React.Component {
@@ -66,23 +64,21 @@ class RXCryptoTicker extends React.Component {
 
         console.log("current state after update: "+JSON.stringify(this.state.tickerStaticEntities));
 
-           /* /!*
-              Reset tickerEntity status after short interval. This is needed to reset
-              css class of tick animation when tickerEntity's value goes up or down again.
-            *!/
+
+           //   Reset tickerEntity status after short interval. This is needed to reset
+            //  css class of tick animation when tickerEntity's value goes up or down again.
+
             setTimeout(() => {
 
-                tickerStaticEntitiesLocal = Object.assign({}, this.state.tickerStaticEntities);
-                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal }
+               var tickerStaticEntitiesLocal = Object.assign({}, this.state.tickerStaticEntities);
 
-                tickerStaticEntitiesLocal[message.symbol].goUp = false
-                tickerStaticEntitiesLocal[message[2]].goDown = false
+                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal });
 
-                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal }
+                tickerStaticEntitiesLocal[message.symbol].goingup = false;
+                tickerStaticEntitiesLocal[message[2]].goingdown = false;
 
-
-                )
-            }, 500);*/
+                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal })
+            }, 500);
 
         };
 
