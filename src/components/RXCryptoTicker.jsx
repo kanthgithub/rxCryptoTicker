@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 
 let CRYPTOCOMPARE_API = "https://streamer.cryptocompare.com/";
 let CRYPTOTICKER_STATIC_DATA_API = "https://cryptostreamingapi.herokuapp.com/tickerData";
+let CRYPTOTICKER_STREAMING_DATA_API = "ws://localhost:8089";
 
 
 class RXCryptoTicker extends React.Component {
@@ -46,16 +47,8 @@ class RXCryptoTicker extends React.Component {
 
     subscribeCryptoStream = () => {
 
-        // Subscribe to CryptoCompare websocket API.
-        let subs = [];
-
-        let cryptoIO = io.connect(CRYPTOCOMPARE_API);
-
-        Object.keys(this.state.tickerStaticEntities).map((key) => {
-            return subs.push("5~CCCAGG~"+ key +"~USD");
-        });
-
-        cryptoIO.emit("SubAdd", { "subs": subs });
+        // Subscribe via connecting to cryptostreamingapi websocket API.
+        let cryptoIO = io.connect(CRYPTOTICKER_STREAMING_DATA_API);
 
         cryptoIO.on("m", (message) => {
             this.updateCryptoTickerState(message);
@@ -63,48 +56,41 @@ class RXCryptoTicker extends React.Component {
     };
 
     updateCryptoTickerState = (message) => {
-        // Update tickerEntity with recent data from CryptoCompare websocket API.
+        // Update tickerEntity with recent data from cryptostreamingapi websocket API.
 
-        message = message.split("~");
-        let tickerStaticEntitiesLocal = Object.assign({}, this.state.tickerStaticEntities);
+        console.log("message for state update: "+message);
 
-        if ((message[4] === "1") || (message[4] === "2")) {
+        if(message){
+            this.setState({ "tickerStaticEntities": message });
+        }
 
-            if (message[4] === "1") {
-                tickerStaticEntitiesLocal[message[2]].goUp = true;
-                tickerStaticEntitiesLocal[message[2]].goDown = false;
-            }
-            else if (message[4] === "2") {
-                tickerStaticEntitiesLocal[message[2]].goUp = false;
-                tickerStaticEntitiesLocal[message[2]].goDown = true;
-            }
-            else {
-                tickerStaticEntitiesLocal[message[2]].goUp = false;
-                tickerStaticEntitiesLocal[message[2]].goDown = false;
-            }
+        console.log("current state after update: "+JSON.stringify(this.state.tickerStaticEntities));
 
-            tickerStaticEntitiesLocal[message[2]].price_usd = message[5];
-            this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal });
-
-            /*
+           /* /!*
               Reset tickerEntity status after short interval. This is needed to reset
               css class of tick animation when tickerEntity's value goes up or down again.
-            */
+            *!/
             setTimeout(() => {
-                tickerStaticEntitiesLocal = Object.assign({}, this.state.tickerStaticEntities)
-                tickerStaticEntitiesLocal[message[2]].goUp = false
+
+                tickerStaticEntitiesLocal = Object.assign({}, this.state.tickerStaticEntities);
+                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal }
+
+                tickerStaticEntitiesLocal[message.symbol].goUp = false
                 tickerStaticEntitiesLocal[message[2]].goDown = false
-                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal })
-            }, 500);
+
+                this.setState({ "tickerStaticEntities": tickerStaticEntitiesLocal }
+
+
+                )
+            }, 500);*/
 
         };
-    };
 
     getTickStyle = (tickerEntity) => {
         // Return css style based on tickerEntity status.
-        if (tickerEntity.goUp) {
+        if (tickerEntity.goingup) {
             return " tickGreen ";
-        } else if (tickerEntity.goDown) {
+        } else if (tickerEntity.goingdown) {
             return " tickRed ";
         } else {
             return " ";
@@ -124,7 +110,7 @@ class RXCryptoTicker extends React.Component {
                                 <div key={ index } className="col-4 col-sm-3 col-xl-2 p-0">
                                     <div className={"stock " + this.getTickStyle(tickerEntity) }>
                                         <p className="text-white m-0">{ tickerEntity.symbol }</p>
-                                        <p className="text-white m-0">{ tickerEntity.price_usd }</p>
+                                        <p className="text-white m-0">{ tickerEntity.price }</p>
                                     </div>
                                 </div>
                             )
