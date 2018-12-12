@@ -11,8 +11,9 @@
 
 ## Streaming:
 
-- Streaming is done via Cryptocompare Streamer
-- crptostreamingapi has finer streaming control on CryptoTickers
+- Streaming is done via CryptoStreamingAPI Streamer
+- CryptoStreamingAPI has finer streaming control on CryptoTickers
+- CryptoStreamingAPI is the backend module and accessible @ https://github.com/kanthgithub/cryptodashboard
 
 - streamer will internally make regular API-calls to coinmarketcap-api to get the marketdata snapshot of the preferred tickers choosen by user OR default tickers
 
